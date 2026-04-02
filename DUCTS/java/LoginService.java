@@ -11,34 +11,35 @@ public class LoginService {
 
     public LoginResponse login(String email, String password) {
 
-        try {
-            if (email == null || password == null) {
-                return new LoginResponse(false, "Invalid input", null, null);
-            }
-
-            String hashedPassword = md5(password);
-
-            String query = "SELECT * FROM users WHERE email = ? AND password = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, email);
-            stmt.setString(2, hashedPassword);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                int role = rs.getInt("role");
-                String username = rs.getString("username");
-
-                return new LoginResponse(true, "Login successful", role, username);
-            } else {
-                return new LoginResponse(false, "Invalid email or password", null, null);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new LoginResponse(false, "Error occurred", null, null);
+    try {
+        if (!ValidationUtil.isValidEmail(email)) {
+            return new LoginResponse(false, "Invalid Email", null, null);
         }
+
+        String hashed = md5(password);
+
+        PreparedStatement stmt = conn.prepareStatement(
+                "SELECT * FROM users WHERE email = ? AND password = ?");
+        stmt.setString(1, email);
+        stmt.setString(2, hashed);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return new LoginResponse(
+                    true,
+                    "Login successful",
+                    rs.getInt("role"),
+                    rs.getString("username")
+            );
+        }
+
+        return new LoginResponse(false, "Invalid credentials", null, null);
+
+    } catch (Exception e) {
+        return new LoginResponse(false, "Error", null, null);
     }
+}
 
     private String md5(String input) throws Exception {
         MessageDigest md = MessageDigest.getInstance("MD5");

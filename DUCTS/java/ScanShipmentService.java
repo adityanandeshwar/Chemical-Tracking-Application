@@ -8,21 +8,25 @@ public class ScanShipmentService {
 
     public String updateShipment(String prodId, String quantity, String location) {
 
-        LocalDate today = LocalDate.now();
-        String thisDate = today.toString();
-
-        String info = "Date: " + thisDate +
-                      ", Location: " + location +
-                      ", Quantity: " + quantity;
-
-        boolean success = addStateToBlockchain(prodId, info);
-
-        if (success) {
-            return "Item has been updated";
-        } else {
-            return "Update failed";
+    try {
+        if (!ValidationUtil.isNotEmpty(prodId)) {
+            return "Product ID required";
         }
+
+        String date = java.time.LocalDate.now().toString();
+
+        String info = "Date: " + date +
+                ", Location: " + location +
+                ", Quantity: " + quantity;
+
+        contract.addState(prodId, info).send();
+
+        return "Item updated";
+
+    } catch (Exception e) {
+        return "Update failed";
     }
+}
 
     private boolean addStateToBlockchain(String prodId, String info) {
         System.out.println("Sending to blockchain...");

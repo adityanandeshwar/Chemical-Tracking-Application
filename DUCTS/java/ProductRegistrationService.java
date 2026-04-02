@@ -28,33 +28,31 @@ public class ProductRegistrationService {
     }
 
     public String registerProduct(String prodName, String username,
-                                  String chemType, String nocNumber) {
+                              String chemType, String nocNumber) {
 
-        try {
-            if (prodName == null || username == null || chemType == null || nocNumber == null) {
-                return "Invalid input";
-            }
-
-            String fullData = prodName +
-                    "\nRegistered By: " + username +
-                    "\nChemical Type: " + chemType +
-                    "\nNOC Number: " + nocNumber;
-
-            String date = LocalDate.now().toString();
-
-            var receipt = contract.newItem(fullData, date).send();
-
-            String productId = "UNKNOWN";
-
-            if (receipt.getLogs() != null && !receipt.getLogs().isEmpty()) {
-                productId = receipt.getTransactionHash();
-            }
-
-            return "Item Added Successfully. Product ID: " + productId;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Transaction failed";
+    try {
+        if (!ValidationUtil.isNotEmpty(prodName)) {
+            return "Product name required";
         }
+
+        String fullData = prodName +
+                "\nRegistered By: " + username +
+                "\nChemical Type: " + chemType +
+                "\nNOC Number: " + nocNumber;
+
+        String date = java.time.LocalDate.now().toString();
+
+        var receipt = contract.newItem(fullData, date).send();
+
+        var events = contract.getAddedEvents(receipt);
+        if (!events.isEmpty()) {
+            return "Product ID: " + events.get(0).id;
+        }
+
+        return "Item added";
+
+    } catch (Exception e) {
+        return "Transaction failed";
     }
+}
 }

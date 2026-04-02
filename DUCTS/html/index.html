@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DUCTS - Decentralized Application</title>
+
+  <link rel="icon" href="images/fibble.png">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body class="violetgradient1">
+
+<center>
+  <div class="loginformcard" id="card1">
+    <h4>DUCTS</h4>
+    <p>
+      Decentralized Drug Tracking Application that stores product data on Blockchain.
+    </p>
+
+    <button class="rolebtn" id="login">Login</button>
+    <button class="rolebtn" id="signup">Signup</button>
+  </div>
+
+  <div class="loginformcard" id="maincard3" style="display:none;">
+    <h4>Create your new account</h4>
+    <form>
+      <input class="forminput" placeholder="Email">
+      <input class="forminput" placeholder="Username">
+      <input class="forminput" type="password" placeholder="Password">
+      <input class="forminput" type="password" placeholder="Confirm Password">
+
+      <select class="formselect">
+        <option>Consumer</option>
+        <option>Retailer</option>
+        <option>Distributor</option>
+        <option>Manufacturer</option>
+      </select>
+
+      <button class="formbtn">Register</button>
+    </form>
+  </div>
+
+  <!-- Login -->
+  <div class="loginformcard" id="maincard2" style="display:none;">
+    <h4>Login</h4>
+    <form>
+      <input class="forminput" placeholder="Email">
+      <input class="forminput" type="password" placeholder="Password">
+      <button class="formbtn">Login</button>
+    </form>
+  </div>
+</center>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+$("#login").click(() => {
+  $("#card1").hide();
+  $("#maincard2").show();
+});
+
+$("#signup").click(() => {
+  $("#card1").hide();
+  $("#maincard3").show();
+});
+</script>
+
+</body>
+</html>
